@@ -14,6 +14,26 @@
 
 @implementation ViewController
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Make sure your segue name in storyboard is the same as this line
+    if ([[segue identifier] isEqualToString:@"idShow"])
+    {
+        // Get reference to the destination view controller
+        
+        ViewController *vc = [segue destinationViewController];
+        
+        // Pass any objects to the view controller here, like...
+        UILabel *lab=[UILabel new];
+        lab=[[UILabel alloc] initWithFrame:CGRectMake(60, 120, 300, 30)];
+        
+        NSIndexPath *path = [_tableView indexPathForSelectedRow];
+        UITableViewCell *cell = [_tableView cellForRowAtIndexPath:path];
+        [lab setText:cell.textLabel.text];
+        [vc.view addSubview:lab];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString* ID = @"ID";
@@ -22,7 +42,6 @@
     NSString* info =[[_tree.apples objectAtIndex:indexPath.row] getInfo];
     
     cell.textLabel.text = info;
-    NSLog(@"%@",info);
     
     return cell;
 }
@@ -34,8 +53,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    _tree=[Tree new];
+    if(_tree==nil)
+        _tree=[Tree new];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -54,4 +73,6 @@
     [self.tree grow];
     [_tableView reloadData];
 }
+
+
 @end
